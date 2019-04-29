@@ -8,7 +8,12 @@
   pointer-events: none;
 }
 
+.form-fields{
+  background-color: aliceblue;
+}
+
 .App-header {
+  
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
