@@ -9,6 +9,8 @@ const fs = require('fs');
 
 var url = 'mongodb://127.0.0.1:27017/customers';
 
+var port=process.env.PORT || PORT;
+
 let Customer = require('./customer.model');
 
 var pathToCustomerId;
@@ -114,6 +116,6 @@ Routes.route('/add').post(function (req, res) {
 
 app.use('/customers', Routes);
 
-app.listen(PORT, function () {
-    console.log("Server is listening to:" + PORT);
+app.listen(port, function () {
+    console.log("Server is listening to:" + port);
 })
