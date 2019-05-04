@@ -6,6 +6,7 @@ import '../node_modules/font-awesome/css/font-awesome.css';
 import CreateTodo from "./components/create-todo.component";
 import EditTodo from "./components/edit-todo.component";
 import TodoList from "./components/list-todo.component";
+import Login from "./components/login.component";
 
 
 class App extends Component {
@@ -20,7 +21,7 @@ class App extends Component {
         <Router>
           <div className="container">
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
-              <Link to="/get" className="navbar-brand">
+              <Link to="/" className="navbar-brand">
                 Mern-App
               </Link>
 
@@ -36,6 +37,7 @@ class App extends Component {
 
 
             </nav>
+            <Route path="/" exact component={Login} />
             <Route path="/get" exact component={TodoList} />
             <Route path="/edit/:id" exact component={EditTodo} />
             <Route path="/create" exact component={CreateTodo} />

@@ -12,6 +12,7 @@ var url = 'mongodb://127.0.0.1:27017/customers';
 var port=process.env.PORT || PORT;
 
 let Customer = require('./customer.model');
+let LoginDtails = require('./loginDtails.model');
 
 var pathToCustomerId;
 
@@ -91,6 +92,18 @@ Routes.route('/get').get(function (req, res) {
         }
     });
 });
+
+Routes.route('/loginDetails').get(function(req,res){
+    LoginDtails.find(function (err,loginDetails){
+        if (err) {
+            console.log(err);
+        } else {
+            res.json(loginDetails);
+
+        }
+    })
+
+})
 
 Routes.route('/:id').get(function (req, res) {
     let id = req.params.id;
