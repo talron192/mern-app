@@ -27,7 +27,7 @@ export default class TodoList extends Component {
         this.dataContect = this.dataContect.bind(this);
     }
     componentDidMount() {
-        axios.get('http://mongodb+srv://talRon:talro1992@cluster0-qpd3p.mongodb.net/customers/get')
+        axios.get('mongodb+srv://talRon:talro1992@cluster0-qpd3p.mongodb.net/customers/get')
             .then(res => {
                 this.setState({ list: res.data });
             })
