@@ -11,8 +11,8 @@ let Customer= new Shema({
     gender:{
         type:String
     },
-    tz:{
-        type:String
+    _id:{
+        type:Number
     } ,
     date:{
         type:String
@@ -28,6 +28,20 @@ let Customer= new Shema({
     }, 
     fax:{
         type:String
+    },
+    actionType:{
+        type:String
+    },
+    matiralStatus:{
+        type:String
+    },
+    sourceArrival:{
+        type:String
+    },
+    address:{
+        type:{},
+        ref:'address'
+        
     },
     pathFolder:{
         type:String

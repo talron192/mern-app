@@ -1,70 +1,122 @@
-import React, { Component } from 'react';
+import React, { Component, useContext } from 'react';
 import axios from 'axios';
 // import ImporterAPI from './Api';
 import { Link } from 'react-router-dom';
+import ReactTable from "react-table";
+import "react-table/react-table.css";
 
 // const API = new ImporterAPI()
 
 
-const Customer = props => (
-    <tr>
-        <td>{props.customer.fullName}</td>
-        {/* <td>{props.customer.password}</td> */}
-        <td>{props.customer.email}</td>
-        <td>{props.customer.gender}</td>
-        <td>{props.customer.tz}</td>
-        <td>{props.customer.date}</td>
-        {/* <td>{props.issueDate.issueDate}</td> */}
-        <td>
-            <Link to={"/edit/"+props.customer.tz}>העלאת מסמכים</Link>
-        </td>
-    </tr>
-)
+
+// const Customer = props => (
+//     <tr >
+//         <td>{props.customer.fullName}</td>
+//         <td>{props.customer._id}</td>
+//         <td> <Link to={"/edit/" + props.customer._id}>העלאת מסמכים</Link></td>
+//     </tr>
+// )
 
 export default class TodoList extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
-            list: []
+            list: [],
+            showDContent: true,
         }
+        this.dataContect = this.dataContect.bind(this);
     }
     componentDidMount() {
         axios.get('http://localhost:4000/customers/get')
             .then(res => {
-                // const posts = res.data.data.children.map(obj => obj.data);
                 this.setState({ list: res.data });
             })
             .catch(function (err) {
                 console.log('error-componentMount', err);
-            })
+            });
     }
 
-    customersList() {
+    dataContect(event) {
+        event.preventDefult();
+    }
+
+    customersList(showData) {
         return this.state.list.map(function (currentCustomer, i) {
-            return <Customer customer={currentCustomer} key={i} />;
-        });
+            return (
+                <tr >
+                    <td>{currentCustomer.fullName}</td>
+                    <td>{currentCustomer._id}</td>
+                    {/* <td> <Link to={"/edit/" + props.customer.id}>העלאת מסמכים</Link></td> */}
+                </tr>
+            )
+            });
     }
-
     render() {
-        return <div>
 
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th scope="col">שם פרטי ומשפחה</th>
-                        {/* <th scope="col">password</th> */}
-                        <th scope="col">דואר אלקטרוני</th>
-                        <th scope="col">מין</th>
-                        <th scope="col">ת.ז</th>
-                        <th scope="col">תאריך לידה</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {this.customersList()}
+        const { showDContent } = this.state.showDContent;
 
-                </tbody>
-            </table>
-        </div>
+        const cols = [
+            {
+                Header: "שם מלא",
+                accessor: "fullName",
+                sortable: false,
+                style: {
+                    textAlign: "center"
+                }
+            },
+            {
+                Header: "תעודת זהות",
+                accessor: "_id",
+                style: {
+                    textAlign: "center"
+                }
+            },
+            {
+                Header: "פעולות",
+                Cell: props => {
+                    return (
+                        <Link to={"/edit/" + props.original._id}> תיק לקוח</Link>
+                    )
+                },
+                style: {
+                    textAlign: "center"
+                },
+                sortable: false,
+                filterable: false,
+
+
+            }
+        ]
+
+        return (
+            
+                <ReactTable
+                    columns={cols}
+                    data={this.state.list}
+                    filterable
+                    noDataText={"אין נתונים"}
+                    defaultPageSize={10}
+                >
+                   
+                </ReactTable>
+
+        )
+
+        // return <div>
+
+        //     <table className="table table-hover">
+        //         <thead>
+        //             <tr >
+
+        //                 <th scope="col">שם מלא</th>
+        //                 <th scope="col">ת.ז</th>
+        //             </tr>
+        //         </thead>
+        //         <tbody>
+        //             {this.customersList()}
+
+        //         </tbody>
+        //     </table>
+        // </div>
     }
 }

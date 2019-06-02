@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from 'axios';
-import { Button, FormGroup, FormControl } from "react-bootstrap";
+// import { Button, FormGroup, Form Control } from "react-bootstrap";
 import './style.css';
 
 export default class Login extends Component {
@@ -29,7 +29,7 @@ export default class Login extends Component {
             password: this.state.password,
         };
 
-        axios.get('http://localhost:4000/customers/loginDetails')
+        axios.get('http://localhost:4000/customers')
             .then(res => {
                 // const posts = res.data.data.children.map(obj => obj.data);
                 console.log(res);

@@ -9,10 +9,10 @@ const fs = require('fs');
 
 var url = 'mongodb://127.0.0.1:27017/customers';
 
-var port=process.env.PORT || PORT;
+var port = process.env.PORT || PORT;
 
 let Customer = require('./customer.model');
-let LoginDtails = require('./loginDtails.model');
+let LoginDetails = require('./loginDetails.model');
 
 var pathToCustomerId;
 
@@ -25,7 +25,7 @@ const path = require('path');
 //Storage a files
 
 const Storage = multer.diskStorage({
-    destination: (req,file,cb)=>{
+    destination: (req, file, cb) => {
         let path = `${pathToCustomerId}`;
         if (fs.existsSync(path)) {
             console.log('path exist');
@@ -82,6 +82,20 @@ Routes.route('/get-id/').post(function (req, res) {
     console.log('pathToCustomerId', pathToCustomerId);
 });
 
+Routes.route('/getId/:id').get(function (req, res) {
+    let id = req.params.id;
+    // let files= fs.readFileSync('public/uploads/756756867754');
+
+    Customer.findById(id, function (err, customer) {
+        if (err) {
+            console.log("error:", err);
+        } else {
+            res.json(customer);
+
+        }
+    });
+});
+
 Routes.route('/get').get(function (req, res) {
     Customer.find(function (err, customers) {
         if (err) {
@@ -93,8 +107,8 @@ Routes.route('/get').get(function (req, res) {
     });
 });
 
-Routes.route('/loginDetails').get(function(req,res){
-    LoginDtails.find(function (err,loginDetails){
+Routes.route('/loginDetails').get(function (req, res) {
+    LoginDetails.find(function (err, loginDetails) {
         if (err) {
             console.log(err);
         } else {
@@ -103,27 +117,31 @@ Routes.route('/loginDetails').get(function(req,res){
         }
     })
 
-})
-
-Routes.route('/:id').get(function (req, res) {
-    let id = req.params.id;
-
-    Customer.findById(id, function (err, customer) {
-        res.json(customer);
-    });
 });
+
 
 
 Routes.route('/add').post(function (req, res) {
     console.log('route-add');
+    console.log(req.body);
     let customer = new Customer(req.body);
-    console.log('added', customer);
-    fs.mkdirSync(`public/uploads/${customer.tz}`);
+    fs.mkdirSync(`public/uploads/${customer._id}`);
+
+    let address = req.body.address;
+    customer.address = address;
+    console.log('added customer', customer);
+
     customer.save()
         .then(customer => {
-            res.status(200).json({ 'customer': 'customer added successfuly' });
+            res.status(200).json({ 'customer': 'customer added successfuly', customer });
         });
 });
+
+Routes.route( '/files-list').post(function (req,res){
+    let files= fs.readFileSync('756756867754');
+
+    console.log('files',files);
+})
 
 /*upload files */
 

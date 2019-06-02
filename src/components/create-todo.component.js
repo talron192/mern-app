@@ -2,8 +2,12 @@ import React, { Component } from 'react';
 import axios from 'axios';
 // import EditTodo from "../components/edit-todo.component";
 import { Link } from 'react-router-dom';
-
+import { Api } from './Api';
 import './style.css';
+
+const ActionType = new Api();
+const MatiralStatus = new Api();
+const SourceArrival = new Api();
 
 
 export default class CreateTodo extends Component {
@@ -17,13 +21,17 @@ export default class CreateTodo extends Component {
             fullName: '',
             email: '',
             gender: '',
-            tz: '',
+            _id: '',
             date: '',
             issueDate: '',
             phoneNumber: '',
             houseNumber: '',
             fax: '',
+            address: { houseAddress: '', city: '', postalCode: '', poBox: '' },
             pathFolder: '',
+            actionType: '',
+            matiralStatus:'',
+            sourceArrival:''
 
             //isCompleted:false
         }
@@ -31,7 +39,7 @@ export default class CreateTodo extends Component {
 
     selectGender(gender) {
         if (gender === 1) {
-            this.setState({gender: 'men'})
+            this.setState({ gender: 'men' })
         }
         if (gender === 2) {
             this.setState({ gender: 'women' })
@@ -45,25 +53,56 @@ export default class CreateTodo extends Component {
         });
     }
 
+    handleAddressChange = (e) => {
+        let address = Object.assign({}, this.state.address);
+
+        switch(e.target.id){
+            case "houseAddress":
+            address.houseAddress = e.target.value;
+            break;
+
+            case "city":
+            address.city = e.target.value;
+            break;
+
+            case "postalCode":
+            address.postalCode = e.target.value;
+            break;
+
+            case "poBox":
+            address.poBox = e.target.value;
+            break;
+
+        }
+        this.setState({ address });
+    }
+
     handleSubmit = (e) => {
-        console.log('handleSubmit');
         const newCustomer = {
             fullName: this.state.fullName,
-            // password: this.state.password,
             email: this.state.email,
             gender: this.state.gender,
-            tz: this.state.tz,
+            _id: this.state._id,
             date: this.state.date,
             issueDate: this.state.issueDate,
             houseNumber: this.state.houseNumber,
             phoneNumber: this.state.phoneNumber,
             fax: this.state.fax,
-            pathFolder: 'public/uploads/'+this.state.tz,
+            actionType: this.state.actionType,
+            matiralStatus: this.state.matiralStatus,
+            sourceArrival: this.state.sourceArrival,
+            address: {
+                houseAddress: this.state.address.houseAddress,
+                city: this.state.address.city,
+                postalCode: this.state.address.postalCode,
+                poBox: this.state.address.poBox,
+            },
+            pathFolder: 'public/uploads/' + this.state._id,
         };
         console.log(newCustomer);
         axios.post('http://localhost:4000/customers/add', newCustomer)
             .then(res => {
-               
+
                 console.log('after then response', res.data);
             })
             .catch(err => {
@@ -72,49 +111,36 @@ export default class CreateTodo extends Component {
         console.log('list', this.list);
     }
     render() {
-        console.log(this.state.gender);
-
         var grid = (
-            <div className="form-fields" >
+            <div className="container">
                 <div className="row">
                     <div className="col-md-4">
                         <input className="form-control" type="text" id="fullName"
-                            onChange={this.handleChange.bind(this)} placeholder="Full name"></input>
+                            onChange={this.handleChange.bind(this)} placeholder="שם מלא"></input>
                     </div>
                     <div className="col-md-4">
                         <input className="form-control" type="text" onChange={this.handleChange.bind(this)}
-                            id="tz" placeholder="ID"></input>
+                            id="_id" placeholder="ת.ז"></input>
                     </div>
                     <div className="col-md-4">
                         <input className="form-control" type="date" onChange={this.handleChange.bind(this)}
-                            id="date" placeholder="Date"></input>
+                            id="date" placeholder="תאריך לידה"></input>
                     </div>
-                    {/* <div className="col-md-4">
-                        <input className="form-control" type="text" onChange={this.handleChange.bind(this)}
-                            id="password" placeholder="Password"></input>
-                    </div> */}
                 </div>
                 <hr></hr>
                 <div className="row">
                     <div className="col-md-4">
                         <input className="form-control" type="text" onChange={this.handleChange.bind(this)}
-                            id="email" placeholder="Email"></input>
+                            id="email" placeholder="אימייל"></input>
                     </div>
                     <div className="col-md-4">
                         <input className="form-control" type="date" onChange={this.handleChange.bind(this)}
-                            id="issueDate" placeholder="IssueDate"></input>
+                            id="issueDate" placeholder="תאריך הנפקת תעודת זהות"></input>
                     </div>
                     <div style={{ marginTop: '-1em', marginLeft: '5em' }}
                         className="col=md-2"
                         className="gender-position"
                         className={this.state.gender === "men" ? "gender-color" : ""} >
-                        {/* <input
-                            type="radio"
-                            onChange={this.handleChange.bind(this)}
-                            value="men"
-                            id="gender"
-                            checked={this.state.gender === "men"}>
-                        </input> */}
                         <label className="gender-font"
                             value={"men"}
                             id="gender"
@@ -127,13 +153,6 @@ export default class CreateTodo extends Component {
                         className="col=md-2"
                         className="gender-position"
                         className={this.state.gender === "women" ? "gender-color" : ""} >
-                        {/* <input
-                            type="radio"
-                            onChange={this.handleChange.bind(this)}
-                            value="women"
-                            id="gender"
-                            checked={this.state.gender === "women"}>
-                        </input> */}
                         <label className="gender-font"
                             value={"women"}
                             id="gender"
@@ -147,25 +166,64 @@ export default class CreateTodo extends Component {
                 <div className="row">
                     <div className="col-md-4">
                         <input className="form-control" type="text" onChange={this.handleChange.bind(this)}
-                            id="houseNumber" placeholder="House Number"></input>
+                            id="houseNumber" placeholder="מספר בית"></input>
                     </div>
                     <div className="col-md-4">
                         <input className="form-control" type="text" onChange={this.handleChange.bind(this)}
-                            id="phoneNumber" placeholder="Phone Number"></input>
+                            id="phoneNumber" placeholder="טלפון נייד"></input>
                     </div>
                     <div className="col-md-4">
                         <input className="form-control" type="text" onChange={this.handleChange.bind(this)}
-                            id="fax" placeholder="Fax"></input>
+                            id="fax" placeholder="פקס"></input>
                     </div>
                 </div>
                 <hr></hr>
+                <div className="row">
+                    <div className="col-md-3">
+                        <input className="form-control" type="text" onChange={this.handleAddressChange.bind(this)}
+                            id="houseAddress" placeholder="כתובת"></input>
+                    </div>
+                    <div className="col-md-3">
+                        <input className="form-control" type="text" onChange={this.handleAddressChange.bind(this)}
+                            id="city" placeholder="עיר"></input>
+                    </div>
+                    <div className="col-md-3">
+                        <input className="form-control" type="text" onChange={this.handleAddressChange.bind(this)}
+                            id="postalCode" placeholder="מיקוד"></input>
+                    </div>
+                    <div className="col-md-3">
+                        <input className="form-control" type="text" onChange={this.handleAddressChange.bind(this)}
+                            id="poBox" placeholder="ת.ד"></input>
+                    </div>
+                </div>
+                <hr></hr>
+                <div className="row">
+                        <div className="col=md-4" style={{marginRight:"1em"}}>
+                            <select  id="actionType" onChange={this.handleChange.bind(this)} className="drop-down">
+                            <option style={{backgroundColor:"lightgrey"}}>סוג פעילות</option>
+                                {ActionType.GetTypeAction().map((action) => <option  key={action.key} value={action.value}>{action.value}</option>)}
+                            </select>
+                        </div>
+                        <div className="col=md-4" style={{marginRight:"1em"}}>
+                            <select  id="matiralStatus" onChange={this.handleChange.bind(this)} className="drop-down">
+                            <option style={{backgroundColor:"lightgrey"}}>מצב משפחתי</option>
+                                {MatiralStatus.GetMatiralStatus().map((matiralStatus) => <option  key={matiralStatus.key} value={matiralStatus.value}>{matiralStatus.value}</option>)}
+                            </select>
+                        </div>
+                        <div className="col=md-4" style={{marginRight:"1em"}}>
+                            <select  id="sourceArrival" onChange={this.handleChange.bind(this)} className="drop-down">
+                            <option style={{backgroundColor:"lightgrey"}}>מקור הגעה</option>
+                                {SourceArrival.GetSourceArrival().map((sourceArrival) => <option  key={sourceArrival.key} value={sourceArrival.value}>{sourceArrival.value}</option>)}
+                            </select>
+                        </div>
+                    </div>
+                    <hr></hr>
 
                 <div className="row">
                     <div className="col-md-6">
                         <button className="btn btn-success"
-                            style={{ float: 'right' }}
                             onClick={this.handleSubmit.bind(this)} >
-                            <Link style={{ color: 'black' }}  to={"/edit/"+this.state.tz}>שמור והמשך</Link>
+                            <Link style={{ color: 'black' }} to={"/edit/" + this.state._id}>שמור והמשך</Link>
                         </button>
                     </div>
 
@@ -175,10 +233,10 @@ export default class CreateTodo extends Component {
 
 
         return (
-            <div className="App">
+            <div className="App" style={{ direction: "rtl" }}>
                 <header className="App-header">
                     <h1 style={{ textAlign: 'center' }}><b>רישום לקוח</b></h1>
-                    <div >
+                    <div className="form-fields" >
                         {grid}
                     </div>
                 </header>

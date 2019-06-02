@@ -1,92 +1,124 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import Alert from 'react-bootstrap/Alert';
-// const queryString = require('query-string');
+import { Link } from 'react-router-dom';
+
+const Customer = props => (
+    console.log(props),
+    <div className="row">
+        <div className="col-md-3">
+            <label>שם הלקוח: {props.customer.fullName}</label>
+        </div>
+        <div className="col-md-3">
+            <label>תעודת זהות: {props.customer._id}</label>
+        </div>
+        <div className="col-md-3">
+            <label>תאריך הנפקת ת.ז: {props.customer.issueDate}</label>
+        </div>
+        <div className="col-md-3">
+            <label>תאריך לידה: {props.customer.date}</label>
+        </div>
+
+    </div>
+)
+
 export default class EditTodo extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedFile: null,
-            uploaded: true,
-            show:false,
-            msg: ''
+            obj: {},
+            success: false
         }
-
-    }
-
-    onChangeHandler = event => {
-        console.log(event.target.files[0]);
-
-        this.setState({
-            selectedFile: event.target.files[0],
-        })
-    }
-
-    onClickHandler = () => {
-        const fileData = new FormData();
-        fileData.append('file', this.state.selectedFile, this.state.selectedFile.name);
-        axios.post("http://localhost:4000/customers/upload", fileData)
-            .then(res => { // then print response status
-                console.log(res);
-                this.setState({
-                    uploaded:true,
-                    show:true,
-                    msg: res.data
-                });
-
-            });
     }
 
     componentDidMount() {
-        axios.post("http://localhost:4000/customers/get-id", { cid: this.props.match.params.id })
+        axios.get("http://localhost:4000/customers/getId/" + this.props.match.params.id, { id: this.props.match.params.id })
             .then(res => { // then print response status
-                console.log(res);
+                this.setState({ obj: res.data });
+            }).then(
+                this.success = true,
+                console.log('componentDidMount', this.success)
+            )
+            .catch(err => {
+                console.log(err);
             });
-        console.log('props', this.props.location.search);
     }
 
+    customerData() {
+
+        var address = this.state.obj.address;
+
+        if (this.success == true) {
+            return (
+                <div>
+                    <div className="row">
+                        <div className="col-md-12">
+                            <h3><b></b>כרטיס לקוח של : {this.state.obj.fullName}</h3>
+                            <span style={{float:"left"}}> <Link to={"/docs/" + this.state.obj._id}>העלאת מסמכים <i class="fa fa-upload" aria-hidden="true"></i></Link> </span>
+                        </div>
+                    </div>
+                    <hr></hr>
+                    <div className="row">
+                        <div className="col-md-3">
+                            <label>שם הלקוח: <b>{this.state.obj.fullName}</b></label>
+                        </div>
+                        <div className="col-md-3">
+                            <label>תעודת זהות: <b>{this.state.obj._id}</b> </label>
+                        </div>
+                        <div className="col-md-3">
+                            <label>תאריך הנפקת ת.ז: <b>{this.state.obj.issueDate}</b> </label>
+                        </div>
+                        <div className="col-md-3">
+                            <label>תאריך לידה: <b>{this.state.obj.date}</b> </label>
+                        </div>
+                    </div>
+                    <hr></hr>
+                    <div className="row">
+                        <div className="col-md-3">
+                            <label>טלפון בית: <b>{this.state.obj.houseNumber}</b></label>
+                        </div>
+                        <div className="col-md-3">
+                            <label>טלפון נייד: <b>{this.state.obj.phoneNumber}</b> </label>
+                        </div>
+                        <div className="col-md-3">
+                            <label>פקס: <b>{this.state.obj.fax}</b> </label>
+                        </div>
+                        <div className="col-md-3">
+                            <label>אימייל: <b>{this.state.obj.email}</b> </label>
+                        </div>
+                    </div>
+                    <hr></hr>
+                    <div className="row">
+                        <div className="col-md-3">
+                            <label> רחוב: <b>{address.houseAddress}</b> </label>
+                        </div>
+                        <div className="col-md-3">
+                            <label> עיר: <b>{address.city}</b> </label>
+                        </div>
+                        <div className="col-md-3">
+                            <label>מיקוד: <b>{address.postalCode}</b> </label>
+                        </div>
+                        <div className="col-md-3">
+                            <label>ת.ד: <b>{address.poBox}</b> </label>
+                        </div>
+                    </div>
+                    <hr></hr>
+                </div>
+            );
+        }
+
+
+    }
 
     render() {
-        const handleDismiss = () => this.setState({ show: false });
+
+
         return (
-            <div className="container">
-                <h1 style={{ textAlign: 'center' }}>העלאת מסמכי לקוח</h1>
-                <br></br>
-                <hr></hr>
-                <div style={{ width: '50%', left: '25%' }} className="input-group">
-                    <div className="form-group files">
-                        <button type="button" className="btn btn-dark" onClick={this.onClickHandler}>העלאה</button>
-                    </div>
-                    <div className="custom-file">
-                        <input type="file" name="file" onChange={this.onChangeHandler}
-                            className="custom-file-input" />
-                        <label className="custom-file-label" >בחר מסמך</label>
-                    </div>
-                </div>
+            <div style={{ direction: "rtl", textAlign: "center" }} className="form-fields">
+
                 {
-                        this.state.show==true ? 
-                        <Alert style={{width:'30%',left:'35%'}} variant="success" onClose={handleDismiss} dismissible>
-                        <Alert.Heading>{this.state.msg}</Alert.Heading>
-                      </Alert> : ''
-                    }
-               
-                 
+                    this.customerData()
+                }
             </div>
-
-            ////////////////////////////////////////////////////////////
-            // <div className="container">
-            //     <div className="row">
-            //         <div className="offset-md-3 col-md-6">
-            //             <div className="form-group files">
-            //                 <h1>העלאת מסמכי לקוח</h1>
-            //                 <br></br>
-            //                 <input type="file" name="file" onChange={this.onChangeHandler} />
-            //             </div>
-            //             <button type="button" className="btn btn-success btn-block" onClick={this.onClickHandler}>Upload</button>
-
-            //         </div>
-            //     </div>
-            // </div>
         )
     }
 }
