@@ -45,7 +45,7 @@ export default class EditTodo extends Component {
 
     customerData() {
 
-        var address = this.state.obj.address;
+        // var address = this.state.obj.address;
 
         if (this.success == true) {
             return (
@@ -89,16 +89,16 @@ export default class EditTodo extends Component {
                     <hr></hr>
                     <div className="row">
                         <div className="col-md-3">
-                            <label> רחוב: <b>{address.houseAddress}</b> </label>
+                            <label> רחוב: <b>{this.state.obj.address.houseAddress}</b> </label>
                         </div>
                         <div className="col-md-3">
-                            <label> עיר: <b>{address.city}</b> </label>
+                            <label> עיר: <b>{this.state.obj.address.city}</b> </label>
                         </div>
                         <div className="col-md-3">
-                            <label>מיקוד: <b>{address.postalCode}</b> </label>
+                            <label>מיקוד: <b>{this.state.obj.address.postalCode}</b> </label>
                         </div>
                         <div className="col-md-3">
-                            <label>ת.ד: <b>{address.poBox}</b> </label>
+                            <label>ת.ד: <b>{this.state.obj.address.poBox}</b> </label>
                         </div>
                     </div>
                     <hr></hr>

@@ -7,7 +7,8 @@ const PORT = 4000;
 const Routes = express.Router();
 const fs = require('fs');
 
-var url = 'mongodb://127.0.0.1:27017/customers';
+var url = 'mongodb+srv://talRon:talro1992@cluster0-qpd3p.mongodb.net/customers';
+// var url = 'mongodb://127.0.0.1:27017/customers';
 
 var port = process.env.PORT || PORT;
 
