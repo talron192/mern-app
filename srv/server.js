@@ -10,7 +10,10 @@ const fs = require('fs');
 var url = 'mongodb+srv://talRon:talro1992@cluster0-qpd3p.mongodb.net/customers';
 // var url = 'mongodb://127.0.0.1:27017/customers';
 
-var port = process.env.PORT || PORT;
+const port = 8081;
+// const port = process.env.PORT || PORT;
+
+console.log('env port',port);
 
 let Customer = require('./customer.model');
 let LoginDetails = require('./loginDetails.model');
