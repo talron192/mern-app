@@ -27,7 +27,7 @@ export default class TodoList extends Component {
         this.dataContect = this.dataContect.bind(this);
     }
     componentDidMount() {
-        axios.get('http://localhost:4000/heroku_cfp0fh8k/get')
+        axios.get('http://localhost:4000/customers/get')
             .then(res => {
                 this.setState({ list: res.data });
             })
