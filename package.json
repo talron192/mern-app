@@ -26,7 +26,7 @@
     "fontAwesome": "node_modules/font-awesome/css/font-awesome.css"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "nodemon server.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

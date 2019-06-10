@@ -8,9 +8,7 @@ const Routes = express.Router();
 const fs = require('fs');
 
 // var url = 'mongodb://talRon:talro1992@ds131737.mlab.com:31737/heroku_cfp0fh8k‏';
-// var url = 'mongodb+srv://talRon:talro1992@cluster0-qpd3p.mongodb.net/customers';
-const url = 'mongodb+srv://talGlobalRon:talro1992!@cluster0-dklnq.mongodb.net/test?retryWrites=true&w=majority';
-
+var url = 'mongodb+srv://talRon:talro1992@cluster0-qpd3p.mongodb.net/customers';
 // var url = 'mongodb://127.0.0.1:27017/customers';
 
 console.log('port============',process.env.PORT);
